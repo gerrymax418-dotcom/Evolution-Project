@@ -16,6 +16,10 @@ public class Subject : MonoBehaviour
     private Food _trackedFood;
     private FoodSpawner _nearestSpawner;
 
+    private float _heatCapacity;
+
+    private const float HEAT_RESITANCE = 200f;
+
     public void Initialize(float size, float speed, bool wasChased)
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -31,7 +35,9 @@ public class Subject : MonoBehaviour
 
     private void Update()
     {
+        AddHeat();
         EatFood();
+        EnterHome();
 
         if (_trackedFood == null)
         {
@@ -46,8 +52,14 @@ public class Subject : MonoBehaviour
         }
     }
 
+    private void AddHeat()
+    {
+        //
+    }
+
     private void EnterHome()
     {
+        if (_nearestSpawner == null) return;
         if (Vector3.Distance(transform.position, _nearestSpawner.transform.position) < _agent.stoppingDistance)
         {
             Destroy(gameObject);
@@ -116,5 +128,6 @@ public class Subject : MonoBehaviour
     public void Chase()
     {
         WasChased = true;
+        // There should be a speed change here too
     }
 }

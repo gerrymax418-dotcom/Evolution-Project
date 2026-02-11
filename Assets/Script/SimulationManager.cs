@@ -6,8 +6,4 @@ public class SimulationManager : MonoBehaviour
 
     private Round[] _rounds;
 
-    private void Awake()
-    {
-        
-    }
 }

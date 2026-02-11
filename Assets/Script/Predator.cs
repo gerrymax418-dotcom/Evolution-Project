@@ -53,8 +53,6 @@ public class Predator : MonoBehaviour
                 _trackedSubject.Eaten();
             }
         }
-
-
     }
 
     private void HandlePatrol()

@@ -10,7 +10,7 @@ public class FoodSpawner : MonoBehaviour
 
     void Start()
     {        
-        for (int index = 0; index < foodSpawnAmount; index++) //loop
+        for (int index = 0; index < foodSpawnAmount; index++)
         {
             float randomX = Random.Range(-collision.size.x / 2, collision.size.x / 2);
             float randomZ = Random.Range(-collision.size.z / 2, collision.size.z / 2);

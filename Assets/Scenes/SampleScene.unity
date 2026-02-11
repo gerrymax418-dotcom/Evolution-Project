@@ -534,6 +534,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1305570466}
+  - component: {fileID: 1305570467}
   m_Layer: 0
   m_Name: Simulation Manager
   m_TagString: Untagged
@@ -556,6 +557,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1305570467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305570465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87df0659149d16148bc017428c5a2ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  environment: {fileID: 0}
 --- !u!1 &1355210371
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,9 +601,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   spawnObject: {fileID: 6034276231371356390, guid: 877ff8d4eeee46744ba4b3114f3d1a09, type: 3}
-  foodSpawnAmount: 50
   collision: {fileID: 1355210373}
-  location: {fileID: 1355210374}
+  foodSpawnAmount: 50
 --- !u!65 &1355210373
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -656,7 +669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 160a907830ddf934ba30575f0cb94189, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  spawnObject: {fileID: 2492011421514415619, guid: f783b76447f8a924689da9f613d02ac7, type: 3}
+  spawnObject: {fileID: 1165290789577068880, guid: f783b76447f8a924689da9f613d02ac7, type: 3}
 --- !u!4 &2004625228
 Transform:
   m_ObjectHideFlags: 0
