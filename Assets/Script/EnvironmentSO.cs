@@ -15,4 +15,10 @@ public class EnvironmentSO : ScriptableObject
 
     [Header("Subject Settings")]
     public int StartingSubjectCount;
+    public float BaseSize;
+    public float BaseSpeed;
+    public float SpeedDifferential;
+    public float SizeDifferential;
+    [Range (0f, 1f)]
+    public float offspringDifferential;
 }

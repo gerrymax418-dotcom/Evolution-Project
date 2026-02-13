@@ -10,11 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 471a7a1bff8540e4284d78a74380f8fb, type: 3}
-  m_Name: New Enviornment
+  m_Name: Starting Enviornment
   m_EditorClassIdentifier: Assembly-CSharp::EnvironmentSO
-  EnemyCount: 0
-  DetectionRadius: 0
-  EnemySpeed: 0
-  FoodCountPerRound: 0
+  EnemyCount: 20
+  DetectionRadius: 20
+  EnemySpeed: 5
+  FoodCountPerRound: 50
   Heat: 0
-  StartingSubjectCount: 0
+  StartingSubjectCount: 25
+  BaseSize: 1
+  BaseSpeed: 6
+  SpeedDifferential: 0.5
+  SizeDifferential: 0.2
+  offspringDifferential: 0.328

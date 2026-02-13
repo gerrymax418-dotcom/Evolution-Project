@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private Predator spawnObject;
+    [SerializeField] private Predator predatorPrefab;
 
     private BoxCollider _collider;
 
@@ -11,14 +11,19 @@ public class EnemySpawner : MonoBehaviour
         _collider = GetComponent<BoxCollider>();
     }
 
-    public void SpawnPredators(int amountToSpawn)
+    public void SpawnPredators(int amountToSpawn, float detectionRadius, float speed)
     {
         for (int index = 0; index < amountToSpawn; index++)
         {
             float randomX = Random.Range(-_collider.size.x / 2, _collider.size.x / 2);
             float randomZ = Random.Range(-_collider.size.z / 2, _collider.size.z / 2);
 
-            Instantiate(spawnObject, new Vector3(randomX + transform.position.x, 0, randomZ + transform.position.z), Quaternion.identity);
+            Predator predator = Instantiate(
+                predatorPrefab, 
+                new Vector3(randomX + transform.position.x, 0, randomZ + transform.position.z), 
+                Quaternion.identity);
+
+            predator.Initialize(speed, detectionRadius);
         }
     }
 }

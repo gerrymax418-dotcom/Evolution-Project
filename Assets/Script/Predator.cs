@@ -5,13 +5,13 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Predator : MonoBehaviour
 {
-    [SerializeField] private float patrolTime;
     [SerializeField] private float patrolDistance;
+    [SerializeField] private float patrolTime;
     [SerializeField] private float checkTime;
 
-    private NavMeshAgent _agent;
-    private Subject _trackedSubject;
     private List<Subject> _attemptedToEat;
+    private Subject _trackedSubject;
+    private NavMeshAgent _agent;
 
     private float _viewDistance;
     private float _patrolTimer;
@@ -22,6 +22,7 @@ public class Predator : MonoBehaviour
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _attemptedToEat = new List<Subject>();
     }
 
     private void Update()
@@ -29,6 +30,8 @@ public class Predator : MonoBehaviour
         if (ChasingTarget())
         {
             _agent.destination = _trackedSubject.transform.position;
+
+            HandleLookingForTarget();
 
             EatTarget();
 
@@ -41,6 +44,11 @@ public class Predator : MonoBehaviour
 
     private void EatTarget()
     {
+        if (_trackedSubject == null)
+        {
+            FindClosestSubjectInViewDistance();
+        }
+
         float distance = Vector3.Distance(_trackedSubject.transform.position, transform.position);
 
         if (distance < _agent.stoppingDistance)
@@ -49,8 +57,10 @@ public class Predator : MonoBehaviour
             // if target escapes add them to attempted list so we can ignore them in the future
             // else
             {
+                Debug.Log("ate");
                 _eaten = true;
                 _trackedSubject.Eaten();
+                _trackedSubject = null;
             }
         }
     }
@@ -59,7 +69,7 @@ public class Predator : MonoBehaviour
     {
         if (ChasingTarget()) return;
 
-        if (_agent.stoppingDistance <= _agent.remainingDistance)
+        if (_agent.remainingDistance <= _agent.stoppingDistance)
         {
             _agent.isStopped = true;
 
@@ -108,6 +118,8 @@ public class Predator : MonoBehaviour
             if (distance < closestSubject)
             {
                 _trackedSubject = subject;
+                _agent.stoppingDistance = _trackedSubject.GetComponent<NavMeshAgent>().radius + _agent.radius + .5f;
+                subject.Chase();
             }
         }
     }
@@ -115,13 +127,15 @@ public class Predator : MonoBehaviour
     public void Initialize(float speed, float viewDistance)
     {
         _viewDistance = viewDistance;
+        _agent.speed = speed;
     }
 
-    public void Reset()
+    public void ResetEnemy()
     {
         _eaten = false;
         _trackedSubject = null;
-        _attemptedToEat = new();
+        _attemptedToEat.Clear();
+        _agent.isStopped = false;
     }
 
     private bool ChasingTarget() => _trackedSubject != null && !_eaten;
