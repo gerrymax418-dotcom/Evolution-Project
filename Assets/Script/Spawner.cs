@@ -1,51 +1,28 @@
-using System.Dynamic;
 using UnityEngine;
 
+// Because of the way that we wrote this script we can actually just use this or all our spawning and we don't have to make new scripts
+// We just drag and drop new prefabs into our spawnobject field in the Unity Editor
 public class Spawner : MonoBehaviour
 {
     public GameObject spawnObject;
-    public int foodSpawnAmount;
     public BoxCollider collision;
-    public Transform location;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    public int foodSpawnAmount;
+
+    // Changed this to on enable so that all our objects are spawned before the first start method is called
+    // https://docs.unity3d.com/2020.1/Documentation/Manual/ExecutionOrder.html if you want to reference what is
+    // called in what order
+    private void OnEnable()
     {
-        //Instantiate(spawnObject, /* figure out how to find a random location for it to spawn*/);
-        
-        for (int index = 0; index < foodSpawnAmount; index++) //loop
+        for (int index = 0; index < foodSpawnAmount; index++) 
         {
             float randomX = Random.Range(-collision.size.x / 2, collision.size.x / 2);
             float randomZ = Random.Range(-collision.size.z / 2, collision.size.z / 2);
-            Instantiate(spawnObject, new Vector3(location.position.x + randomX,0,location.position.z + randomZ), Quaternion.identity);
-            if (index == 0)
-            {
-                Debug.Log("index \n = 0");
-            }
-            if (index == 0 && index <= 1)
-            {
-                Debug.Log("index = 0");
-            }
-            if (index == 0 || index > 0)
-            {
-                Debug.Log("index = 0");
-            }
-            //runs "index = 0" in the console 4 times
 
+            Instantiate(
+                spawnObject, 
+                transform.position + new Vector3(randomX, 0, randomZ), 
+                Quaternion.identity);
         }
-
-        
-
-
-
-
-
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

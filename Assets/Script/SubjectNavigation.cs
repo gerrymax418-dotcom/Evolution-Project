@@ -1,18 +1,25 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+// This is forcing us to have a NavMeshAgent on our Subject Navigation making it safer for us to use
+[RequireComponent(typeof(NavMeshAgent))]
 public class SubjectNavigation : MonoBehaviour
 {
     private NavMeshAgent _agent;
 
-    private void Start()
+    // Regions are way to group a piece of code together
+    // just to make the script cleaner and easier to use
+    // #region [name of the region]
+    // #endregion
+    #region PREVIOUS_HOMEWORK_SOLUTIONS
+    private void FindClosestFood()
     {
         // This is getting all the foods in the game.
         // Since we are running this on start this will only run at the start of the game once
         // The FindObjectsByType<DataTypeWeAreLookingFor>() method returns an array
         // You can learn more about arrays in this section of this video https://youtu.be/798cyzhQYSo?si=04ZC3qcE96mI41q-&t=536
         Food[] foods = FindObjectsByType<Food>(FindObjectsSortMode.None);
-        
+
         // We are creating the float for the closest distance.
         // The reason we are setting it to float.MaxValue is because we know that any other value will be guaranteed lower than float.MaxValue
         // this means even if a food is really far away when we run the code the closest distance will be replaced with the first one
@@ -52,16 +59,23 @@ public class SubjectNavigation : MonoBehaviour
             }
         }
 
-        _agent = GetComponent<NavMeshAgent>();
-
         // Here because we know that we checked all the food positions
         // we know that this closest food position is the correct position for our food
         _agent.destination = closestFoodPosition;
+    }
+    #endregion
+
+    private void Start()
+    {
+        // We don't have to have this inside our Find Closest Food Method since we only want to do this once
+        _agent = GetComponent<NavMeshAgent>();
+
+        FindClosestFood();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        FindClosestFood();
     }
 }
