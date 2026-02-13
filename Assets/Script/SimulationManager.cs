@@ -14,11 +14,13 @@ public class SimulationManager : MonoBehaviour
     [SerializeField] private FoodSpawner foodSpawner;
     [SerializeField] private SubjectHome homePrefab;
 
+    private List<Subject> _spawnedSubjects = new List<Subject>();
+    private List<Subject> _survivedSubjects = new();
     private List<Round> _rounds = new();
+
     private SubjectHome[] _homes;
 
-    private int _currentNumberOfSubjects = 0;
-    private Round _currentRound;
+    private Round _currentRound = new();
 
     private void Awake()
     {
@@ -29,7 +31,6 @@ public class SimulationManager : MonoBehaviour
         }
 
         Instance = this;
-
     }
 
     private void Start()
@@ -50,10 +51,6 @@ public class SimulationManager : MonoBehaviour
         foodSpawner.SpawnFood(environment.FoodCountPerRound);
 
         SpawnSubjects(false);
-
-        Round newRound = new Round();
-        _currentRound = newRound;
-        _currentRound.SubjectsAtStart = _currentNumberOfSubjects;
     }
 
     private void SpawnSubjects(bool withChildren)
@@ -62,23 +59,6 @@ public class SimulationManager : MonoBehaviour
         {
             home.SpawnSubjects(environment.offspringDifferential, withChildren);
         }
-    }
-
-    private (int count, float size, float speed) GetSubjectData()
-    {
-        int subjectCount = 0;
-        float accumulatedSize = 0;
-        float accumulatedSpeed = 0;
-        int realCount = 0;
-
-        foreach (SubjectHome home in _homes)
-        {
-            subjectCount += home.GetSubjectCount();
-            accumulatedSize += home.GetTotalSize();
-            accumulatedSpeed += home.GetTotalSpeed();
-            realCount += home.GetRealCount();
-        }
-        return (subjectCount, accumulatedSize / realCount, accumulatedSpeed / realCount);
     }
 
     private void AddSubjectsToHomes()
@@ -91,8 +71,6 @@ public class SimulationManager : MonoBehaviour
             {
                 currentHome++;
             }
-
-            // if (currentHome >= _homes.Length) break;
 
             float randomSize = environment.BaseSize +
                 UnityEngine.Random.Range(-environment.SizeDifferential, environment.SizeDifferential);
@@ -110,9 +88,7 @@ public class SimulationManager : MonoBehaviour
 
     private void SpawnAndCacheHomes()
     {
-        _currentNumberOfSubjects = environment.StartingSubjectCount;
-
-        List<Vector3> homePositions = SpawnerRingPositions.GenerateRing(_currentNumberOfSubjects);
+        List<Vector3> homePositions = SpawnerRingPositions.GenerateRing(environment.StartingSubjectCount);
 
         _homes = new SubjectHome[homePositions.Count];
 
@@ -123,52 +99,68 @@ public class SimulationManager : MonoBehaviour
         }
     }
 
-    public void RemoveFromSimulation()
+    public void AddToSimulation(Subject subject)
     {
-        _currentNumberOfSubjects--;
+        _spawnedSubjects.Add(subject);
+        _currentRound.SubjectsAtStart = _spawnedSubjects.Count;
+    }
 
-        if (_currentNumberOfSubjects <= 0)
+    public void RemoveFromSimulation(Subject subject, bool survived)
+    {
+        if (_spawnedSubjects.Contains(subject)) 
         {
-            Subject[] subjects = FindObjectsByType<Subject>(FindObjectsSortMode.None);
+            _spawnedSubjects.Remove(subject);
 
-            Debug.Log(subjects.Length);
-
-            if (subjects.Length != 0)
+            if (survived)
             {
-                subjects[0].GoHome();
-                return;
+                _survivedSubjects.Add(subject);
             }
-
-            Debug.Log(subjects.Length);
-
-            // Collecting Data
-            var data = GetSubjectData();
-
-            _currentRound.SubjectsAtEnd = data.count;
-            _currentRound.AverageSize = data.size;
-            _currentRound.AverageSpeed = data.speed;
-
-            _rounds.Add(_currentRound);
-
-            //Starting a new Round
-            _currentRound = new();
-
-            _currentRound.SubjectsAtStart = data.count;
-            _currentNumberOfSubjects = data.count;
-
-            foreach(Food food in FindObjectsByType<Food>(FindObjectsSortMode.None))
-            {
-                Destroy(food.gameObject);
-            }
-
-            foreach(Predator predator in FindObjectsByType<Predator>(FindObjectsSortMode.None))
-            {
-                predator.ResetEnemy();
-            }
-
-            foodSpawner.SpawnFood(environment.FoodCountPerRound);
-            SpawnSubjects(true);
         }
+
+        if (_spawnedSubjects.Count <= 0)
+        {
+            GatherData();
+            StartNewRound();
+        }
+    }
+
+    private void StartNewRound()
+    {
+        _currentRound = new();
+        _survivedSubjects.Clear();
+        _spawnedSubjects.Clear();
+
+        foreach (Food food in FindObjectsByType<Food>(FindObjectsSortMode.None))
+        {
+            Destroy(food.gameObject);
+        }
+
+        foreach (Predator predator in FindObjectsByType<Predator>(FindObjectsSortMode.None))
+        {
+            predator.ResetEnemy();
+        }
+
+        foodSpawner.SpawnFood(environment.FoodCountPerRound);
+        SpawnSubjects(true);
+    }
+
+    private void GatherData()
+    {
+        int survivedCount = _survivedSubjects.Count;
+        float accumulatedSize = 0;
+        float accumulatedSpeed = 0;
+
+        foreach (Subject survivedSubject in _survivedSubjects)
+        {
+            accumulatedSize += survivedSubject.Size;
+            accumulatedSpeed += survivedSubject.Speed;
+        }
+
+        _currentRound.SubjectsAtEnd = survivedCount;
+        _currentRound.AverageSize = accumulatedSize / survivedCount;
+        _currentRound.AverageSpeed = accumulatedSpeed / survivedCount;
+
+        _rounds.Add(_currentRound);
     }
 }
 

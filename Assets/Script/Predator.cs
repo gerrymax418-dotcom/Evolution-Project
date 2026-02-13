@@ -117,10 +117,15 @@ public class Predator : MonoBehaviour
 
             if (distance < closestSubject)
             {
+                closestSubject = distance;
                 _trackedSubject = subject;
-                _agent.stoppingDistance = _trackedSubject.GetComponent<NavMeshAgent>().radius + _agent.radius + .5f;
-                subject.Chase();
             }
+        }
+
+        if (_trackedSubject != null)
+        {
+            _agent.stoppingDistance = _trackedSubject.GetComponent<NavMeshAgent>().radius + _agent.radius + .5f;
+            _trackedSubject.Chase();
         }
     }
 

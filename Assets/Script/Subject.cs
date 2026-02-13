@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -20,25 +21,6 @@ public class Subject : MonoBehaviour
 
     private const float HEAT_RESITANCE = 200f;
 
-    public void Initialize(float size, float speed, bool wasChased = false)
-    {
-        Size = size;
-        Speed = speed;
-        FoodRequirement = wasChased ? 3 : 2;
-
-        _agent = GetComponent<NavMeshAgent>();
-
-        model.localScale = Vector3.one * Size;
-
-        float visualRadius = Size / 2f;
-
-        _agent.radius = visualRadius;
-        _agent.stoppingDistance = visualRadius + .1f;
-        _agent.speed = Speed;
-
-        FindNearestFood();
-    }
-
     private void Update()
     {
         AddHeat();
@@ -58,6 +40,32 @@ public class Subject : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
+
+    public void Initialize(float size, float speed, bool wasChased = false)
+    {
+        Size = size;
+        Speed = speed;
+        FoodRequirement = wasChased ? 3 : 2;
+
+        _agent = GetComponent<NavMeshAgent>();
+
+        model.localScale = Vector3.one * Size;
+
+        float visualRadius = Size / 2f;
+
+        _agent.radius = visualRadius;
+        _agent.stoppingDistance = visualRadius + .1f;
+        _agent.speed = Speed;
+
+        FindNearestFood();
+    }
+
+    
+
     private void AddHeat()
     {
         //
@@ -75,8 +83,6 @@ public class Subject : MonoBehaviour
 
         if (Vector3.Distance(transform.position, _nearestSpawner.transform.position) < _agent.stoppingDistance)
         {
-            
-
             SubjectData data = new();
 
             data.Speed = Speed;
@@ -84,7 +90,7 @@ public class Subject : MonoBehaviour
             data.Size = Size;
 
             _nearestSpawner.AddSubject(data);
-            SimulationManager.Instance.RemoveFromSimulation();
+            SimulationManager.Instance.RemoveFromSimulation(this, true);
             Destroy(gameObject);
         }
     }
@@ -111,7 +117,7 @@ public class Subject : MonoBehaviour
 
         if (_nearestSpawner == null)
         {
-            SimulationManager.Instance.RemoveFromSimulation();
+            SimulationManager.Instance.RemoveFromSimulation(this, false);
             Destroy(gameObject);
             return;
         }
@@ -136,7 +142,7 @@ public class Subject : MonoBehaviour
     }
 
     private void FindNearestFood()
-    {
+    {     
         float closestSubject = float.MaxValue;
 
         foreach (Food food in FindObjectsByType<Food>(FindObjectsSortMode.None))
@@ -151,6 +157,13 @@ public class Subject : MonoBehaviour
                 _trackedFood = food;
             }
         }
+        
+        if (_trackedFood == null)
+        {
+            SimulationManager.Instance.RemoveFromSimulation(this, false);
+            Destroy(gameObject);
+            return;
+        }
 
         _agent.destination = _trackedFood.transform.position;
     }
@@ -158,7 +171,7 @@ public class Subject : MonoBehaviour
     public void Eaten()
     {
         Destroy(gameObject);
-        SimulationManager.Instance.RemoveFromSimulation();
+        SimulationManager.Instance.RemoveFromSimulation(this, false);
     }
 
     public void Chase()

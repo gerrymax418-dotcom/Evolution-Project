@@ -37,7 +37,8 @@ public class SubjectHome : MonoBehaviour
 
                 Subject subject = Instantiate(prefab, transform.position, Quaternion.identity);
                 subject.Initialize(randomSize, randomSpeed);
-                Debug.Log("Spawned");
+
+                SimulationManager.Instance.AddToSimulation(subject);
 
             }
         }
@@ -46,8 +47,11 @@ public class SubjectHome : MonoBehaviour
         {
             if (_subjects[i] != null)
             {
-                Debug.Log("Spawned");
-                Instantiate(prefab, transform.position, Quaternion.identity).Initialize(_subjects[i].Size, _subjects[i].Speed, _subjects[i].WasChased);
+                Subject subject = Instantiate(prefab, transform.position, Quaternion.identity);
+                
+                subject.Initialize(_subjects[i].Size, _subjects[i].Speed, _subjects[i].WasChased);
+
+                SimulationManager.Instance.AddToSimulation(subject);
             }
 
             _subjects[i] = null;
@@ -82,18 +86,6 @@ public class SubjectHome : MonoBehaviour
         return accumulatedSize;
     }
 
-    public int GetSubjectCount()
-    {
-        int count = 0;
-
-        foreach (SubjectData subject in _subjects) 
-        {
-            if (subject != null)
-                count++;
-        }
-
-        return count == 2 ? 3 : count;
-    }
     public int GetRealCount()
     {
         int count = 0;

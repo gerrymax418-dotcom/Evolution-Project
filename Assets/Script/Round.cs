@@ -1,7 +1,7 @@
 using System;
 
 [Serializable]
-public struct Round
+public class Round
 {
     public int SubjectsAtStart { get; set; }
     public int SubjectsAtEnd { get; set; }
