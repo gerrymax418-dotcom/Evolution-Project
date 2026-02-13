@@ -13,14 +13,17 @@ public class SubjectNavigation : MonoBehaviour
         Vector3 closestFoodPosition = new();
         for (int index = 0; index < foods.Length; index++)
         {
-            if (Vector3.Distance(foods[i].transform.position, transform.position))
+            float distance = Vector3.Distance(foods[index].transform.position, transform.position);
+            if (distance < closestDistance)
             {
-                closestDistance = //vector3.distance
+                closestDistance = distance;
+                closestFoodPosition = foods[index].transform.position;
             }
+
         }
 
         _agent = GetComponent<NavMeshAgent>();
-        _agent.destination
+        _agent.destination = closestFoodPosition;
 
     }
 
