@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4e0f9846c7feea249952feaddb71785f
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 316977
+  packageName: Code Hopper
+  packageVersion: 1.0
+  assetPath: Assets/Veras Studios/CodeHopper/Editor/VerasStudios.Hopper.Editor.asmdef
+  uploadId: 748258
