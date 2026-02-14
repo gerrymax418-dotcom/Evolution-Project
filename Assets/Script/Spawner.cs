@@ -1,6 +1,7 @@
 using System.Dynamic;
 using UnityEngine;
 
+
 public class Spawner : MonoBehaviour
 {
     public GameObject spawnObject;
