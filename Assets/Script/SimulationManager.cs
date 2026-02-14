@@ -4,11 +4,19 @@ using System;
 
 public class SimulationManager : MonoBehaviour
 {
+    // This is the singleton pattern. Definitely complicated if you want to 
+    // do further research would recommend. But basically this is here so we can
+    // access all our values without having to search for this simulation instance.
+    // or creating a variable for it. THE BIG DOWNSIDE for this is that there can only be
+    // one singleton so if we have more than one instance of something. like our enemies
+    // or subjects this will just not work.
     public static SimulationManager Instance;
 
+    // Enviornment values are just numbers and stuff to define our simulation
     [Header("Starting Values")]
     [SerializeField] private EnvironmentSO environment;
 
+    // references to our spawners
     [Header("References")]
     [SerializeField] private EnemySpawner enemySpawner;
     [SerializeField] private FoodSpawner foodSpawner;

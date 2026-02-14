@@ -96,7 +96,9 @@ public class Subject : MonoBehaviour
         _agent.radius = visualRadius;
 
         // We are using the stopping distance to determine if our subject has eaten
-        // a food pellet
+        // a food pellet. the + .1f is a tiny buffer we are giving the agent so it
+        // doesn't have to be right ontop of the food. We also add the visual radius
+        // because visual radius is the size of our actual capsule.
         _agent.stoppingDistance = visualRadius + .1f;
         _agent.speed = Speed;
 
@@ -221,12 +223,18 @@ public class Subject : MonoBehaviour
         }
     }
 
+    // Eating food if we can
     private void EatFood()
     {
+        // if we don't have a tracked food we are not trying to eat anything and can 
+        // ignore the rest of the code
         if (_trackedFood == null) return;
 
+        // caching our distance for reaadability
         float distance = Vector3.Distance(transform.position, _trackedFood.transform.position);
 
+        // if we are close enough we can check this by using our _agent.stoppingDistance
+        // value that we set when we initialized this subject
         if (distance < _agent.stoppingDistance)
         {
             Destroy(_trackedFood.gameObject);
@@ -234,10 +242,13 @@ public class Subject : MonoBehaviour
         }
     }
 
+    // Looking for the closets food
     private void FindNearestFood()
-    {     
+    {
+        // setting this to the maximum possible value
         float closestSubject = float.MaxValue;
 
+        // searching for the closest food
         foreach (Food food in FindObjectsByType<Food>(FindObjectsSortMode.None))
         {
             Vector3 subjectPosition = food.transform.position;
@@ -251,22 +262,36 @@ public class Subject : MonoBehaviour
             }
         }
         
+        // if we did'nt find a food then there is no more food available and we die
+        // from starvation.
         if (_trackedFood == null)
         {
+            // We are removing ourselves from the simulation and setting survived to
+            // false since we died from starvation.
             SimulationManager.Instance.RemoveFromSimulation(this, false);
             Destroy(gameObject);
+
+            // We don't want to set our destination because we are dead so we return
             return;
         }
 
+        // setting our destination because there is still food available
         _agent.destination = _trackedFood.transform.position;
     }
 
+    // This method is called by the enemy class to tell us that we died 
+    // because we were eaten.
     public void Eaten()
     {
+        // We are destroyed because we got eaten
         Destroy(gameObject);
+
+        // We didn't survive so we are setting that value to false
         SimulationManager.Instance.RemoveFromSimulation(this, false);
     }
 
+    // Letting us know that we were chased. So next round if we survive, we have to
+    // search for more food
     public void Chase()
     {
         WasChased = true;
