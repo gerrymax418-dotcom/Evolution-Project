@@ -21,7 +21,7 @@ public class Subject : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = normalSpeed;
-
+        
     }
 
     void Update()
@@ -48,6 +48,8 @@ public class Subject : MonoBehaviour
             agent.speed = escapeSpeed;
         else
                 agent.speed = normalSpeed;
+        agent.speed = enemyNearby ? escapeSpeed : normalSpeed;
+        // the same as the if/else statement above, "?" meaning if it is then this, : else
         }
         
     }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class home : MonoBehaviour
 {
-    public GameObject spawnObject;
+    public Subject spawnSubject;
     public int subjectSpawnAmount;
     public BoxCollider collision;
     public Transform location;
@@ -15,7 +15,8 @@ public class home : MonoBehaviour
         {
             float randomX = Random.Range(-collision.size.x / 2, collision.size.x / 2);
             float randomZ = Random.Range(-collision.size.z / 2, collision.size.z / 2);
-            Instantiate(spawnObject, new Vector3(location.position.x + randomX, 0, location.position.z + randomZ), Quaternion.identity);
+            Subject newSubject = Instantiate(spawnSubject, new Vector3(location.position.x + randomX, 0, location.position.z + randomZ), Quaternion.identity);
+            SimulationManager.Instance.spawnedSubjects.Add(newSubject);
             if (index == 0)
             {
                 Debug.Log("index \n = 0");
@@ -28,6 +29,7 @@ public class home : MonoBehaviour
             {
                 Debug.Log("index = 0");
             }
+            
             //runs "index = 0" in the console 4 times
 
         }
