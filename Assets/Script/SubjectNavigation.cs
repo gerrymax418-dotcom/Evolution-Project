@@ -3,11 +3,17 @@ using UnityEngine.AI;
 
 public class SubjectNavigation : MonoBehaviour
 {
+    [SerializeField]
     private NavMeshAgent _agent;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        FindClosestFood();
 
+    }
+
+    private void FindClosestFood()
+    {
         Food[] foods = FindObjectsByType<Food>(FindObjectsSortMode.None);
         float closestDistance = float.MaxValue;
         Vector3 closestFoodPosition = new();
@@ -22,14 +28,12 @@ public class SubjectNavigation : MonoBehaviour
 
         }
 
-        _agent = GetComponent<NavMeshAgent>();
         _agent.destination = closestFoodPosition;
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        FindClosestFood();
     }
 }

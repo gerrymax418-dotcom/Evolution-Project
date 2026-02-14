@@ -1,21 +1,21 @@
 using System.Dynamic;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour
+public class home : MonoBehaviour
 {
     public GameObject spawnObject;
-    public int foodSpawnAmount;
+    public int subjectSpawnAmount;
     public BoxCollider collision;
     public Transform location;
     void OnEnable()
     {
         //Instantiate(spawnObject, /* figure out how to find a random location for it to spawn*/);
-        
-        for (int index = 0; index < foodSpawnAmount; index++) //loop
+
+        for (int index = 0; index < subjectSpawnAmount; index++) //loop
         {
             float randomX = Random.Range(-collision.size.x / 2, collision.size.x / 2);
             float randomZ = Random.Range(-collision.size.z / 2, collision.size.z / 2);
-            Instantiate(spawnObject, new Vector3(location.position.x + randomX,0,location.position.z + randomZ), Quaternion.identity);
+            Instantiate(spawnObject, new Vector3(location.position.x + randomX, 0, location.position.z + randomZ), Quaternion.identity);
             if (index == 0)
             {
                 Debug.Log("index \n = 0");
@@ -32,7 +32,7 @@ public class Spawner : MonoBehaviour
 
         }
 
-        
+
 
 
 
@@ -45,6 +45,6 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
