@@ -44,7 +44,7 @@ public class SimulationManager : MonoBehaviour
         AddSubjectsToHomes();
 
         enemySpawner.SpawnPredators(
-            environment.StartingSubjectCount,
+            environment.EnemyCount,
             environment.DetectionRadius,
             environment.EnemySpeed);
 
