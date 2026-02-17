@@ -33,7 +33,7 @@ public class SubjectHome : MonoBehaviour
         _subjects[addIndex] = subject;
     }
 
-    public void SpawnSubjects(float offSpringDifferential, bool withChildren = true)
+    public void SpawnSubjects(float heat, float offSpringDifferential, bool withChildren = true)
     {
         // This if statement is to spawn our child of our two subjects
         if (withChildren)
@@ -67,7 +67,7 @@ public class SubjectHome : MonoBehaviour
                 // you can take a look at initializing by clicking on it
                 // and pressing f12
                 Subject subject = Instantiate(prefab, transform.position, Quaternion.identity);
-                subject.Initialize(randomSize, randomSpeed);
+                subject.Initialize(randomSize, randomSpeed, heat);
 
                 // We are passing in the subject that we Instantiated and
                 // giving it to our simulation manager
@@ -86,7 +86,7 @@ public class SubjectHome : MonoBehaviour
                 Subject subject = Instantiate(prefab, transform.position, Quaternion.identity);
                 
                 // Initalizing it just giving it, just passing through it's original values
-                subject.Initialize(_subjects[i].Size, _subjects[i].Speed, _subjects[i].WasChased);
+                subject.Initialize(_subjects[i].Size, _subjects[i].Speed, heat, _subjects[i].WasChased);
 
                 // Giving the subject we spawned to the simulation manager
                 SimulationManager.Instance.AddToSimulation(subject);

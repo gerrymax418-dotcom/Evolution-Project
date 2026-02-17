@@ -17,7 +17,9 @@ public class EnvironmentSO : ScriptableObject
     public int StartingSubjectCount;
     public float BaseSize;
     public float BaseSpeed;
+    [Range(0f, 1f)]
     public float SpeedDifferential;
+    [Range(0f, 1f)]
     public float SizeDifferential;
     [Range (0f, 1f)]
     public float offspringDifferential;

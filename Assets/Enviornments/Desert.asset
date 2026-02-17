@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 471a7a1bff8540e4284d78a74380f8fb, type: 3}
+  m_Name: Desert
+  m_EditorClassIdentifier: Assembly-CSharp::EnvironmentSO
+  EnemyCount: 0
+  DetectionRadius: 0
+  EnemySpeed: 0
+  FoodCountPerRound: 0
+  Heat: 0
+  StartingSubjectCount: 0
+  BaseSize: 0
+  BaseSpeed: 0
+  SpeedDifferential: 0
+  SizeDifferential: 0
+  offspringDifferential: 0

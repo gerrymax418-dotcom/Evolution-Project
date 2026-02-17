@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -31,12 +30,13 @@ public class Subject : MonoBehaviour
     // The heat stuff is yet to be implemented. Need some sort of logic behind this to
     // work these are just here to actually use later
     private float _heatCapacity;
+    private float _heat;
 
     // const means that this value NEVER changes. When we create the const
     // variable we have to assign the value and UPPER_CASING is the standard
     // convention for writing const values. Sometimes you will see people
     // using _UNDERSCORE_BEGINNING with this convention as well. I don't... you can.
-    private const float HEAT_RESITANCE = 200f;
+    private const float HEAT_RESITANCE = 100f;
 
     // Runs every frame
     private void Update()
@@ -67,11 +67,13 @@ public class Subject : MonoBehaviour
     }
 
     // This is what we're doing when we first initalize our subject
-    public void Initialize(float size, float speed, bool wasChased = false)
+    public void Initialize(float size, float speed, float heat, bool wasChased = false)
     {
         // Assigning the values
         Size = size;
         Speed = speed;
+        _heatCapacity = HEAT_RESITANCE;
+        _heat = heat;
 
         // this is using the ternary operator I mentioned.
         // FoodRequirement is equal to if wasChased then 3 else 2
@@ -107,8 +109,13 @@ public class Subject : MonoBehaviour
 
     private void AddHeat()
     {
-        // Nothing exists here we have to add the logic for how size and heat
-        // interact with our subjects
+        _heatCapacity -= Time.deltaTime * _heat * Size;
+
+        if (_heatCapacity < 0f)
+        {
+            Destroy(gameObject);
+            SimulationManager.Instance.RemoveFromSimulation(this, EndSimulationCause.Heat);
+        }
     }
 
     // This is checking if we are close enough to the home to actually enter the home
@@ -147,7 +154,7 @@ public class Subject : MonoBehaviour
             // we are removing ourselves from the simulation, that's what this means
             // it means ourselves and true in this case means that we survived.
             // you can check out the method by clicking f12
-            SimulationManager.Instance.RemoveFromSimulation(this, true);
+            SimulationManager.Instance.RemoveFromSimulation(this, EndSimulationCause.Survived);
 
             // Once we have removed ourselves we can safely destroy the gameObject
             // It's important to note that Destroy doesn't destory the game object
@@ -199,7 +206,7 @@ public class Subject : MonoBehaviour
         {
             // This is removing ourselves from the simulation
             // false in this case means that we didn't survive
-            SimulationManager.Instance.RemoveFromSimulation(this, false);
+            SimulationManager.Instance.RemoveFromSimulation(this, EndSimulationCause.Eaten);
 
             // Destroying ourselves here
             Destroy(gameObject);
@@ -268,7 +275,7 @@ public class Subject : MonoBehaviour
         {
             // We are removing ourselves from the simulation and setting survived to
             // false since we died from starvation.
-            SimulationManager.Instance.RemoveFromSimulation(this, false);
+            SimulationManager.Instance.RemoveFromSimulation(this, EndSimulationCause.Eaten);
             Destroy(gameObject);
 
             // We don't want to set our destination because we are dead so we return
@@ -287,7 +294,7 @@ public class Subject : MonoBehaviour
         Destroy(gameObject);
 
         // We didn't survive so we are setting that value to false
-        SimulationManager.Instance.RemoveFromSimulation(this, false);
+        SimulationManager.Instance.RemoveFromSimulation(this, EndSimulationCause.Eaten);
     }
 
     // Letting us know that we were chased. So next round if we survive, we have to
@@ -297,4 +304,12 @@ public class Subject : MonoBehaviour
         WasChased = true;
         // There should be a speed change here too
     }
+}
+
+[Serializable]
+public enum EndSimulationCause
+{
+    Survived,
+    Eaten,
+    Heat
 }

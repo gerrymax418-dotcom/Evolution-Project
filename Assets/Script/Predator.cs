@@ -53,11 +53,19 @@ public class Predator : MonoBehaviour
 
         if (distance < _agent.stoppingDistance)
         {
-            // Figure out how a target can escape
-            // if target escapes add them to attempted list so we can ignore them in the future
-            // else
+            float randomValue = Random.value;
+
+            float survivalChance = _trackedSubject.Size * .5f;
+
+            survivalChance = Mathf.Clamp(survivalChance, .1f, .9f);
+
+            if (randomValue < survivalChance)
             {
-                Debug.Log("ate");
+                _attemptedToEat.Add(_trackedSubject);
+                _trackedSubject = null;
+            }
+            else
+            {
                 _eaten = true;
                 _trackedSubject.Eaten();
                 _trackedSubject = null;

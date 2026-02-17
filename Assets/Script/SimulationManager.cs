@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Diagnostics;
 
 public class SimulationManager : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class SimulationManager : MonoBehaviour
 
     private List<Subject> _spawnedSubjects = new List<Subject>();
     private List<Subject> _survivedSubjects = new();
+    private List<Subject> _eatenSubjects = new();
+    private List<Subject> _heatDeath = new();
     private List<Round> _rounds = new();
 
     private SubjectHome[] _homes;
@@ -65,7 +68,7 @@ public class SimulationManager : MonoBehaviour
     {
         foreach (SubjectHome home in _homes)
         {
-            home.SpawnSubjects(environment.offspringDifferential, withChildren);
+            home.SpawnSubjects(environment.Heat, environment.offspringDifferential, withChildren);
         }
     }
 
@@ -113,16 +116,29 @@ public class SimulationManager : MonoBehaviour
         _currentRound.SubjectsAtStart = _spawnedSubjects.Count;
     }
 
-    public void RemoveFromSimulation(Subject subject, bool survived)
+    public void RemoveFromSimulation(Subject subject, EndSimulationCause cause)
     {
-        if (_spawnedSubjects.Contains(subject)) 
+        if (_spawnedSubjects.Contains(subject))
         {
             _spawnedSubjects.Remove(subject);
 
-            if (survived)
+            switch (cause)
             {
-                _survivedSubjects.Add(subject);
+                case EndSimulationCause.Survived:
+                    _survivedSubjects.Add(subject);
+                    break;
+                case EndSimulationCause.Eaten:
+                    _eatenSubjects.Add(subject);
+
+                    break;
+                case EndSimulationCause.Heat:
+                    _heatDeath.Add(subject);
+                    break;
             }
+        }
+        else
+        {
+            throw new Exception("Our subject was not in our spawned subject list. THIS SHOULD NOT BE HAPPENING");
         }
 
         if (_spawnedSubjects.Count <= 0)
@@ -167,6 +183,8 @@ public class SimulationManager : MonoBehaviour
         _currentRound.SubjectsAtEnd = survivedCount;
         _currentRound.AverageSize = accumulatedSize / survivedCount;
         _currentRound.AverageSpeed = accumulatedSpeed / survivedCount;
+        _currentRound.SubjectsDiedByPredator = _eatenSubjects.Count;
+        _currentRound.SubjectsDiedByHeat = _heatDeath.Count;
 
         _rounds.Add(_currentRound);
     }
