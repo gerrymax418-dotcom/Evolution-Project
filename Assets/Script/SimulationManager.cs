@@ -25,6 +25,8 @@ public class SimulationManager : MonoBehaviour
     private List<Subject> _spawnedSubjects = new List<Subject>();
     private List<Subject> _survivedSubjects = new();
     private List<Subject> _eatenSubjects = new();
+    private List<Subject> _exposureSubjects = new();
+    private List<Subject> _starvedSubjects = new();
     private List<Subject> _heatDeath = new();
     private List<Round> _rounds = new();
 
@@ -128,10 +130,15 @@ public class SimulationManager : MonoBehaviour
                     break;
                 case EndSimulationCause.Eaten:
                     _eatenSubjects.Add(subject);
-
                     break;
                 case EndSimulationCause.Heat:
                     _heatDeath.Add(subject);
+                    break;
+                case EndSimulationCause.Starvation:
+                    _starvedSubjects.Add(subject);
+                    break;
+                case EndSimulationCause.Exposure:
+                    _exposureSubjects.Add(subject);
                     break;
             }
         }
@@ -149,11 +156,14 @@ public class SimulationManager : MonoBehaviour
 
     private void StartNewRound()
     {
+        _currentRound = new();
+
+        _starvedSubjects.Clear();
+        _exposureSubjects.Clear();
+        _survivedSubjects.Clear();
+        _spawnedSubjects.Clear(); 
         _eatenSubjects.Clear();
         _heatDeath.Clear();
-        _currentRound = new();
-        _survivedSubjects.Clear();
-        _spawnedSubjects.Clear();
 
         foreach (Food food in FindObjectsByType<Food>(FindObjectsSortMode.None))
         {
@@ -184,8 +194,10 @@ public class SimulationManager : MonoBehaviour
         _currentRound.SubjectsAtEnd = survivedCount;
         _currentRound.AverageSize = accumulatedSize / survivedCount;
         _currentRound.AverageSpeed = accumulatedSpeed / survivedCount;
-        _currentRound.SubjectsDiedByPredator = _eatenSubjects.Count;
-        _currentRound.SubjectsDiedByHeat = _heatDeath.Count;
+        _currentRound.Eaten = _eatenSubjects.Count;
+        _currentRound.HeatDeath = _heatDeath.Count;
+        _currentRound.ExposureDeath = _exposureSubjects.Count;
+        _currentRound.StarvationDeath = _starvedSubjects.Count;
 
         _rounds.Add(_currentRound);
     }
