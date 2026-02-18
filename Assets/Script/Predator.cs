@@ -59,7 +59,7 @@ public class Predator : MonoBehaviour
 
             survivalChance = Mathf.Clamp(survivalChance, .1f, .9f);
 
-            if (randomValue < survivalChance || _trackedSubject.Speed >= 8)
+            if (randomValue < survivalChance)
             {
                 _attemptedToEat.Add(_trackedSubject);
                 _trackedSubject = null;
@@ -86,8 +86,14 @@ public class Predator : MonoBehaviour
             if (_patrolTimer > patrolTime)
             {
                 _patrolTimer = 0;
+
+                Vector3 currentPosition = transform.position;
+                float distanceFromHome = currentPosition.magnitude;
+                Vector3 homeBias = -currentPosition.normalized * Mathf.Clamp01(distanceFromHome * .3f);
+
                 Vector3 randomDeltaPosition = new Vector3(Random.Range(-patrolDistance, patrolDistance), 0f, Random.Range(-patrolDistance, patrolDistance));
 
+                randomDeltaPosition = Vector3.ClampMagnitude(randomDeltaPosition + homeBias, patrolDistance);
                 _agent.destination = transform.position + randomDeltaPosition;
                 _agent.isStopped = false;
             }
