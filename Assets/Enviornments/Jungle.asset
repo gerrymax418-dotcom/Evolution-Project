@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 471a7a1bff8540e4284d78a74380f8fb, type: 3}
-  m_Name: Desert
+  m_Name: Jungle
   m_EditorClassIdentifier: Assembly-CSharp::EnvironmentSO
-  EnemyCount: 8
-  DetectionRadius: 50
-  EnemySpeed: 4.5
-  FoodCountPerRound: 20
-  Heat: 1
+  EnemyCount: 25
+  DetectionRadius: 13.3
+  EnemySpeed: 5
+  FoodCountPerRound: 100
+  Heat: 0.691
   StartingSubjectCount: 25
   BaseSize: 1
   BaseSpeed: 4.5

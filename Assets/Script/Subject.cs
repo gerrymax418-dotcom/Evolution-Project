@@ -36,7 +36,7 @@ public class Subject : MonoBehaviour
     // variable we have to assign the value and UPPER_CASING is the standard
     // convention for writing const values. Sometimes you will see people
     // using _UNDERSCORE_BEGINNING with this convention as well. I don't... you can.
-    private const float HEAT_RESITANCE = 100f;
+    private const float HEAT_RESITANCE = 60f;
 
     // Runs every frame
     private void Update()

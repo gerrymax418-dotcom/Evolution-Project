@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 471a7a1bff8540e4284d78a74380f8fb, type: 3}
-  m_Name: Starting Enviornment
+  m_Name: Plains
   m_EditorClassIdentifier: Assembly-CSharp::EnvironmentSO
   EnemyCount: 20
   DetectionRadius: 20
-  EnemySpeed: 5
+  EnemySpeed: 6.5
   FoodCountPerRound: 50
   Heat: 0
   StartingSubjectCount: 25
