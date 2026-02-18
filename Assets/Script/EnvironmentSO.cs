@@ -10,7 +10,6 @@ public class EnvironmentSO : ScriptableObject
 
     [Header("Environment Settings")]
     public int FoodCountPerRound;
-    [Range(0f, 1f)]
     public float Heat;
 
     [Header("Subject Settings")]

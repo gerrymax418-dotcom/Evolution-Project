@@ -15,11 +15,11 @@ MonoBehaviour:
   EnemyCount: 20
   DetectionRadius: 20
   EnemySpeed: 6.5
-  FoodCountPerRound: 50
-  Heat: 0
-  StartingSubjectCount: 25
+  FoodCountPerRound: 120
+  Heat: 0.25
+  StartingSubjectCount: 40
   BaseSize: 1
   BaseSpeed: 6
-  SpeedDifferential: 0.5
-  SizeDifferential: 0.2
-  offspringDifferential: 0.328
+  SpeedDifferential: 0.34
+  SizeDifferential: 0.478
+  offspringDifferential: 0.672
