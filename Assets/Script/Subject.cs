@@ -77,7 +77,7 @@ public class Subject : MonoBehaviour
 
         // this is using the ternary operator I mentioned.
         // FoodRequirement is equal to if wasChased then 3 else 2
-        FoodRequirement = wasChased ? 3 : 2;
+        FoodRequirement = GetFoodrequirement(size, speed, wasChased);
 
         // Assigning _agent
         _agent = GetComponent<NavMeshAgent>();
@@ -206,7 +206,7 @@ public class Subject : MonoBehaviour
         {
             // This is removing ourselves from the simulation
             // false in this case means that we didn't survive
-            SimulationManager.Instance.RemoveFromSimulation(this, EndSimulationCause.Eaten);
+            SimulationManager.Instance.RemoveFromSimulation(this, EndSimulationCause.Exposure);
 
             // Destroying ourselves here
             Destroy(gameObject);
@@ -275,7 +275,7 @@ public class Subject : MonoBehaviour
         {
             // We are removing ourselves from the simulation and setting survived to
             // false since we died from starvation.
-            SimulationManager.Instance.RemoveFromSimulation(this, EndSimulationCause.Eaten);
+            SimulationManager.Instance.RemoveFromSimulation(this, EndSimulationCause.Starvation);
             Destroy(gameObject);
 
             // We don't want to set our destination because we are dead so we return
@@ -304,6 +304,18 @@ public class Subject : MonoBehaviour
         WasChased = true;
         // There should be a speed change here too
     }
+
+    private int GetFoodrequirement(float size, float speed, bool wasChased)
+    {
+        float baseFood = 1f;
+        float sizeWeight = .5f;
+        float speedWeight = .09f;
+        float speedPower = 1.5f;
+
+        float cost = baseFood + sizeWeight * size + speedWeight * Mathf.Pow(speed, speedPower);
+
+        return Mathf.CeilToInt(cost * (wasChased ? 1.25f : 1f));
+    }
 }
 
 [Serializable]
@@ -311,5 +323,7 @@ public enum EndSimulationCause
 {
     Survived,
     Eaten,
-    Heat
+    Heat,
+    Starvation,
+    Exposure
 }
