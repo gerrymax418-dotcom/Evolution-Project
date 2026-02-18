@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Diagnostics;
 
 public class SimulationManager : MonoBehaviour
 {
@@ -150,6 +149,8 @@ public class SimulationManager : MonoBehaviour
 
     private void StartNewRound()
     {
+        _eatenSubjects.Clear();
+        _heatDeath.Clear();
         _currentRound = new();
         _survivedSubjects.Clear();
         _spawnedSubjects.Clear();

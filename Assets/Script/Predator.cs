@@ -59,7 +59,7 @@ public class Predator : MonoBehaviour
 
             survivalChance = Mathf.Clamp(survivalChance, .1f, .9f);
 
-            if (randomValue < survivalChance)
+            if (randomValue < survivalChance || _trackedSubject.Speed >= 8)
             {
                 _attemptedToEat.Add(_trackedSubject);
                 _trackedSubject = null;
